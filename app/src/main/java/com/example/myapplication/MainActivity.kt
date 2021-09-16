@@ -18,13 +18,13 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
 
-        findViewById<Button>(R.id.btn1).apply {
+        findViewById<Button>(R.id.btn_plus).apply {
             this.setOnClickListener {
                 btnClick()
             }
         }
 
-        tv = findViewById(R.id.tv)
+        tv = findViewById(R.id.tv_num)
 
         mainViewModel.b.observe(this) { list ->
             tv.text = list?.joinToString {
