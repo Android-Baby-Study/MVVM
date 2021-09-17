@@ -4,59 +4,49 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.lifecycle.ViewModelProvider
 
 class MainActivity : AppCompatActivity() {
     private val mainViewModel: MainViewModel by viewModels()
 
-    private lateinit var tv: TextView
+    private lateinit var tvNum: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-
         findViewById<Button>(R.id.btn_plus).apply {
             this.setOnClickListener {
-                btnClick()
+                plusBtnClick()
+            }
+        }
+        findViewById<Button>(R.id.btn_minus).apply {
+            this.setOnClickListener {
+                minusBtnClick()
+            }
+        }
+        findViewById<Button>(R.id.btn_reset).apply {
+            this.setOnClickListener {
+                resetBtnClick()
             }
         }
 
-        tv = findViewById(R.id.tv_num)
+        tvNum = findViewById(R.id.tv_num)
 
-        mainViewModel.b.observe(this) { list ->
-            tv.text = list?.joinToString {
-                it + "\n"
-            }
+        mainViewModel.a.observe(this) { number ->
+            tvNum.text = "$number"
         }
     }
 
-    override fun onStart() {
-        super.onStart()
-        mainViewModel.onLifeCycle("start")
-    }
-
-    override fun onResume() {
-        super.onResume()
+    private fun plusBtnClick() {
         mainViewModel.plusNumber()
-        mainViewModel.onLifeCycle("resume")
     }
 
-    override fun onPause() {
-        mainViewModel.onLifeCycle("pause")
-        super.onPause()
+    private fun minusBtnClick() {
+        mainViewModel.minusNumber()
     }
 
-    override fun onDestroy() {
-        mainViewModel.onLifeCycle("destroy")
-        mainViewModel.plusNumber()
-        super.onDestroy()
-    }
-
-    private fun btnClick() {
-        mainViewModel.plusNumber()
-        Toast.makeText(applicationContext, mainViewModel.printNumber(), Toast.LENGTH_SHORT).show()
+    private fun resetBtnClick() {
+        mainViewModel.resetNumber()
     }
 }
