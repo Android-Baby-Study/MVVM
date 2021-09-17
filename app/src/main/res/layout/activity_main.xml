@@ -21,7 +21,7 @@
             android:layout_marginTop="320dp"
             android:textSize="34sp"
             android:textStyle="bold"
-            android:text="@{viewmodel.num}"
+            android:text="@{String.valueOf(viewmodel.num)}"
 
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
