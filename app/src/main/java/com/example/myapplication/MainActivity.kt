@@ -2,24 +2,22 @@ package com.example.myapplication
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Button
-import android.widget.TextView
-import android.widget.Toast
-import androidx.activity.viewModels
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import com.example.myapplication.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var mainViewModel: MainViewModel
+    private lateinit var binding: ActivityMainBinding
 
-    private lateinit var btn: Button
-    private lateinit var recyclerView: RecyclerView
+    private val mainViewModel: MainViewModel by lazy { ViewModelProvider(
+        this,
+        ViewModelProvider.NewInstanceFactory()
+    ).get(MainViewModelImpl::class.java) }
+
     private lateinit var recyclerAdapter: MainRecyclerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
 
         initView()
 
@@ -27,20 +25,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initView() {
-        this.btn = findViewById(R.id.btn)
-        this.btn.setOnClickListener {
-            mainViewModel.getData()
-        }
-
-        this.recyclerAdapter = MainRecyclerAdapter()
-        this.recyclerView = findViewById(R.id.rec)
-        this.recyclerView.adapter = recyclerAdapter
-        this.recyclerView.layoutManager = LinearLayoutManager(this)
-
+        this.binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        this.binding.lifecycleOwner = this
+        this.binding.vm = this.mainViewModel
+        this.binding.activity = this
+        this.binding.rec.adapter = MainRecyclerAdapter()
     }
 
     private fun initViewModel() {
-        mainViewModel = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory()).get(MainViewModelImpl::class.java)
 
         mainViewModel.data.observe(this) {
             this.recyclerAdapter.setItems(it)

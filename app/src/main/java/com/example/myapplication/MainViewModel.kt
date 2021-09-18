@@ -3,12 +3,11 @@ package com.example.myapplication
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 
 interface MainViewModel {
     val data: LiveData<List<User>>
 
-    fun getData()
+    fun getUserData()
 }
 
 class MainViewModelImpl : MainViewModel, ViewModel() {
@@ -16,7 +15,7 @@ class MainViewModelImpl : MainViewModel, ViewModel() {
     override val data: LiveData<List<User>>
         get() = _data
 
-    override fun getData() {
+    override fun getUserData() {
         val items = ArrayList<User>()
         items.add(User("A1","123123123asdasdasdasdasd"))
         items.add(User("A2","223123123asdasdasdasdasd"))
