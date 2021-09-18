@@ -12,7 +12,7 @@ interface MainViewModelInterface {
     fun initNum()
 }
 
-class MainViewModel: ViewModel(), MainViewModelInterface {
+class MainViewModelImpl: ViewModel(), MainViewModelInterface {
     private val _num: MutableLiveData<Int> = MutableLiveData(0)
     override val num: LiveData<Int>
         get() = _num

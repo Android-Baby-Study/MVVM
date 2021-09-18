@@ -7,7 +7,7 @@ import androidx.databinding.DataBindingUtil
 import com.example.myapplication.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
-    private val mainViewModel: MainViewModel by viewModels()
+    private val mainViewModel: MainViewModelImpl by viewModels()
     private lateinit var binding: ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
