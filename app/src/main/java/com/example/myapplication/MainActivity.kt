@@ -2,61 +2,51 @@ package com.example.myapplication
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 
-class MainActivity : AppCompatActivity() {
-    private val mainViewModel: MainViewModel by viewModels()
+class MainActivity : AppCompatActivity(), View.OnClickListener  {
 
-    private lateinit var tv: TextView
+    companion object{
+        const val TAG : String = "MainActivity"
+    }
+
+    private lateinit var mainViewModel : MainViewModel
+    private val btnPlus : Button by lazy { findViewById<Button>(R.id.btn_plus)}
+    private val btnMinus : Button by lazy { findViewById(R.id.btn_minus)}
+    private val btnReset : Button by lazy { findViewById(R.id.btn_reset) }
+    private val tvNumber : TextView by lazy { findViewById(R.id.tv_number)}
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        //ViewModel 객체 생성
+        mainViewModel = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory()).get(MainViewModel::class.java)
 
-        findViewById<Button>(R.id.btn1).apply {
-            this.setOnClickListener {
-                btnClick()
-            }
+        //LiveData(number)에 ViewModel 연결
+        mainViewModel.number.observe(this, Observer {
+            Log.d(TAG, "viewModel의 number 관찰중... : $it")
+            tvNumber.text = it.toString()
+        })
+
+        btnPlus.setOnClickListener(this)
+        btnMinus.setOnClickListener(this)
+        btnReset.setOnClickListener(this)
+    }
+
+    override fun onClick(view: View?) {
+        when(view){
+            btnPlus -> mainViewModel.plusNumber()
+            btnMinus-> mainViewModel.minusNumber()
+            btnReset -> mainViewModel.resetNumber()
         }
-
-        tv = findViewById(R.id.tv)
-
-        mainViewModel.b.observe(this) { list ->
-            tv.text = list?.joinToString {
-                it + "\n"
-            }
-        }
     }
 
-    override fun onStart() {
-        super.onStart()
-        mainViewModel.onLifeCycle("start")
-    }
-
-    override fun onResume() {
-        super.onResume()
-        mainViewModel.plusNumber()
-        mainViewModel.onLifeCycle("resume")
-    }
-
-    override fun onPause() {
-        mainViewModel.onLifeCycle("pause")
-        super.onPause()
-    }
-
-    override fun onDestroy() {
-        mainViewModel.onLifeCycle("destroy")
-        mainViewModel.plusNumber()
-        super.onDestroy()
-    }
-
-    private fun btnClick() {
-        mainViewModel.plusNumber()
-        Toast.makeText(applicationContext, mainViewModel.printNumber(), Toast.LENGTH_SHORT).show()
-    }
 }
